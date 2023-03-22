@@ -1,33 +1,43 @@
 package com.catchthemoment.service;
 
-import com.catchthemoment.dto.ConfirmationEmailDTO;
-import com.catchthemoment.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.NotNull;
 
 @Service
 @RequiredArgsConstructor
-public class UserConfirmMailService implements UserService {
-    private final ServiceMail serviceMail;
-    @Override
-    public ResponseEntity<?> saveUser(UserDTO userDTO) {
+@Slf4j
+public class UserConfirmMailService {
+    private final JavaMailSender mailSender;
 
-        ConfirmationEmailDTO confirmationEmailDTO = new ConfirmationEmailDTO(userDTO.name());
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(userDTO.email());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:8080/confirm-account?token=" + confirmationEmailDTO.confirmationToken());
-        serviceMail.sendMail(mailMessage);
+    public void sendConfirmationEmail(@NotNull String email) {
+        if (!email.isEmpty()) {
+            SimpleMailMessage mailMessage = createSimpleMessage(email);
+            mailSender.send(mailMessage);
+        }
+        log.error("mail is not valid or empty ! ");
+        throw new MailSendException("Mail is not valid"+ email);
+    }
 
-        return ResponseEntity.ok("Verify email by the link sent on your email address");
+    public SimpleMailMessage createSimpleMessage(String email) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Complete Registration!");
+        message.setText("To confirm your account, please click here : "
+                + "http://localhost:8080/confirm-account?token=" + createMailToken());
+        return message;
 
     }
 
-    @Override
-    public ResponseEntity<?> confirmEmail(ConfirmationEmailDTO emailDTO) {
-        return null;
+
+    private String createMailToken() {
+        String confToken = RandomStringUtils.random(20);
+        return confToken;
     }
 }

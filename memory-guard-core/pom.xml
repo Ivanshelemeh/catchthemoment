@@ -17,6 +17,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.catchthemoment</groupId>
             <artifactId>memory-guard-domain</artifactId>
             <version>0.0.1</version>
@@ -51,8 +55,19 @@
             <artifactId>passay</artifactId>
             <version>1.6.2</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-junit5</artifactId>
+            <version>1.6.14</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.awaitility/awaitility -->
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.1.1</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
