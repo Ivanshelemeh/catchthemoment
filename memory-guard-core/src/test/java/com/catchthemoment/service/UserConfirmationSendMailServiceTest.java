@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class UserConfirmationMailServiceTest {
+public class UserConfirmationSendMailServiceTest {
 
     @Mock
     private JavaMailSender sender;
@@ -51,7 +51,7 @@ public class UserConfirmationMailServiceTest {
             MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
             assertEquals(0, receivedMessages.length);
             Exception exception = assertThrows(
-                    MailSendException.class,()->userConfirmMailService.sendConfirmationEmail("")
+                    MailSendException.class, () -> userConfirmMailService.sendConfirmationEmail("")
             );
             assertEquals("Mail is not valid", exception.getMessage());
         });
