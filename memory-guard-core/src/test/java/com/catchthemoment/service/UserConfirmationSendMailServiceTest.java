@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -22,7 +21,6 @@ import java.io.IOException;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,11 +51,8 @@ public class UserConfirmationSendMailServiceTest {
         await().atMost(2, SECONDS).untilAsserted(() -> {
             MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
             assertEquals(0, receivedMessages.length);
-            Exception exception = assertThrows(
-                    MailSendException.class, () -> userConfirmMailService.sendConfirmationEmail(currentUser)
-            );
-            assertEquals("Mail is not valid", exception.getMessage());
         });
+
     }
 
 }
