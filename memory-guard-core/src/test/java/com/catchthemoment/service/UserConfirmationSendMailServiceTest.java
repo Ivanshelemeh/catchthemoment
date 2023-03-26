@@ -1,5 +1,6 @@
 package com.catchthemoment.service;
 
+import com.catchthemoment.dto.UserDTO;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -22,6 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class UserConfirmationSendMailServiceTest {
@@ -40,6 +42,7 @@ public class UserConfirmationSendMailServiceTest {
     @Test
     @DisplayName("Should create message with content")
     void should_create_message_success() throws MessagingException, IOException {
+        UserDTO currentUser= mock(UserDTO.class);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("user@spring.io");
         mailMessage.setTo("info@memorynotfound.com");
@@ -51,7 +54,7 @@ public class UserConfirmationSendMailServiceTest {
             MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
             assertEquals(0, receivedMessages.length);
             Exception exception = assertThrows(
-                    MailSendException.class, () -> userConfirmMailService.sendConfirmationEmail("")
+                    MailSendException.class, () -> userConfirmMailService.sendConfirmationEmail(currentUser)
             );
             assertEquals("Mail is not valid", exception.getMessage());
         });

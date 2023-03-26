@@ -1,5 +1,6 @@
 package com.catchthemoment.service;
 
+import com.catchthemoment.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,13 +17,13 @@ import javax.validation.constraints.NotNull;
 public class UserConfirmMailService {
     private final JavaMailSender mailSender;
 
-    public void sendConfirmationEmail(@NotNull String email) {
-        if (!email.isEmpty()) {
-            SimpleMailMessage mailMessage = createSimpleMessage(email);
+    public void sendConfirmationEmail(@NotNull UserDTO userDTO) {
+        if (!userDTO.email().isEmpty()) {
+            SimpleMailMessage mailMessage = createSimpleMessage(userDTO.email());
             mailSender.send(mailMessage);
         }
         log.error("mail is not valid or empty ! ");
-        throw new MailSendException("Mail is not valid"+ email);
+        throw new MailSendException("Mail is not valid"+ userDTO.email());
     }
 
     public SimpleMailMessage createSimpleMessage(String email) {
